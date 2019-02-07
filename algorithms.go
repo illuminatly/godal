@@ -269,7 +269,7 @@ func (src RasterBand) SieveFilter(
 
 //Unimplemented: SimpleImageWarp
 //Unimplemented: SuggestedWarpOutput
-//Unimplemented: SuggsetedWarpOutput2
+//Unimplemented: SuggestedWarpOutput2
 //Unimplemented: SerializeTransformer
 //Unimplemented: DeserializeTransformer
 
