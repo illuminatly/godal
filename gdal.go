@@ -278,6 +278,22 @@ type ColorEntry struct {
 	cval *C.GDALColorEntry
 }
 
+type VSILFILE struct {
+	cval *C.VSILFILE
+}
+
+type VSIDIR struct {
+	cval *C.VSIDIREntry
+}
+
+type VSIStatGo struct {
+	Exists bool
+	Size  uint64
+}
+
+type VSISTAT struct {
+	cval *C.VSIStatBufL
+}
 /* -------------------------------------------------------------------- */
 /*      Callback "progress" function.                                   */
 /* -------------------------------------------------------------------- */
@@ -558,6 +574,7 @@ func (driver Driver) LongName() string {
 // Unimplemented: DuplicateGCPs
 // Unimplemented: GCPsToGeoTransform
 // Unimplemented: ApplyGeoTransform
+
 
 /* ==================================================================== */
 /*      major objects (dataset, and, driver, drivermanager).            */
@@ -1726,4 +1743,91 @@ func GetCacheUsed() int {
 func FlushCacheBlock() bool {
 	flushed := C.GDALFlushCacheBlock()
 	return flushed != 0
+}
+
+/* ==================================================================== */
+/*      GDAL VSI Virtual File System                                    */
+/* ==================================================================== */
+
+// List VSI files
+func VSIReadDirRecursive(filename string) []string {
+	name := C.CString(filename)
+	defer C.free(unsafe.Pointer(name))
+
+	p := C.VSIReadDirRecursive(name)
+	var strings []string
+	q := uintptr(unsafe.Pointer(p))
+	for {
+		p = (**C.char)(unsafe.Pointer(q))
+		if *p == nil {
+			break
+		}
+		strings = append(strings, C.GoString(*p))
+		q += unsafe.Sizeof(q)
+	}
+
+	return strings
+}
+
+
+// Open file.
+func VSIFOpenL(filename string, fileAccess string) (VSILFILE, error) {
+	cFileName := C.CString(filename)
+	defer C.free(unsafe.Pointer(cFileName))
+	cFileAccess := C.CString(fileAccess)
+	defer C.free(unsafe.Pointer(cFileAccess))
+	file := C.VSIFOpenL(cFileName, cFileAccess)
+
+	if file == nil {
+		return VSILFILE{nil}, fmt.Errorf("Error: VSILFILE '%s' open error", filename)
+	}
+	return VSILFILE{file}, nil
+}
+
+// Close file.
+func VSIFCloseL(file VSILFILE) {
+	C.VSIFCloseL(file.cval)
+	return
+}
+
+// Read bytes from file.
+func VSIFReadL(nSize, nCount int, file VSILFILE) []byte {
+	data := make([]byte, nSize*nCount)
+	p := unsafe.Pointer(&data[0])
+	C.VSIFReadL(p, C.size_t(nSize), C.size_t(nCount), file.cval)
+
+	return data
+}
+
+// Delete (unlink) a VSI file
+func VSIUnlink(filename string)(bool, error){
+
+	cFileName := C.CString(filename)
+	defer C.free(unsafe.Pointer(cFileName))
+	status := C.VSIUnlink(cFileName)
+	if(status == 0 ){
+		return true, nil
+	} else {
+		return false, errors.New(fmt.Sprintf("Error deleting file %v ",filename))
+	}
+}
+
+func VSIStat(filename string)(VSIStatGo, error){
+
+	cFileName := C.CString(filename)
+	defer C.free(unsafe.Pointer(cFileName))
+	fileStat := &C.VSIStatBufL{}
+	defer C.free(unsafe.Pointer(fileStat))
+	code := C.VSIStatExL(cFileName, fileStat, 0)
+	if code != -1 {
+
+		//todo: convert c.longlong to uint64
+
+		return VSIStatGo{Exists: true,Size: fileStat.st_size}, nil
+	} else {
+		return VSIStatGo{}, errors.New(fmt.Sprintf("Unable to stat file %s",filename))
+	}
+
+
+
 }
