@@ -22,13 +22,16 @@ var _ = fmt.Println
 /* GDAL utilities                                */
 /* --------------------------------------------- */
 
+//GDALTranslateOptions holds options to be passed to gdal translated
 type GDALTranslateOptions struct {
 	cval *C.GDALTranslateOptions
 }
+
+//GDALWarpAppOptions holds options to be passed to gdal translated
 type GDALWarpAppOptions struct {
 	cval *C.GDALWarpAppOptions
 }
-
+//GDALTranslate is a utility to convert images into different formats
 func GDALTranslate(
 	destName string,
 	srcDS Dataset,
@@ -57,7 +60,7 @@ func GDALTranslate(
 	return Dataset{outputDs}
 
 }
-
+//GDALWarp is a utility to warp images into different projections
 func GDALWarp(
 	destName string,
 	dstDs Dataset,
