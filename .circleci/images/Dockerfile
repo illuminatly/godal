@@ -1,3 +1,7 @@
-FROM golang:1.11.5-stretch
+FROM ubuntu:18.04
 MAINTAINER tingold@boundlessgeo.com
-RUN apt-get update && apt-get -y install git ssh tar gzip ca-certificates gdal-bin
+RUN apt-get update && apt-get -y install git ssh tar gzip ca-certificates gdal-bin gdal-data libgdal-dev pkg-config
+RUN wget https://dl.google.com/go/go1.11.5.linux-amd64.tar.gz && tar -xzvf go1.11.5.linux-amd64.tar.gz && mv go /usr/local
+ENV GOROOT=/usr/local/go
+ENV PATH=$GOROOT/bin:$PATH
+ENTRYPOINT /bin/bash
