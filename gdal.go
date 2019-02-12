@@ -1822,5 +1822,4 @@ func VSIStat(filename string)(VSIStatGo, error){
 	} else {
 		return VSIStatGo{}, errors.New(fmt.Sprintf("Unable to stat file %s",filename))
 	}
-
 }
