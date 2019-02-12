@@ -3,9 +3,9 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/boundlessgeo/go-gdal"
 	"log"
 	"strings"
-	"github.com/boundlessgeo/go-gdal"
 )
 
 func main() {
