@@ -7,6 +7,7 @@ pulls in several unmerged PRs from that repo (including importantly gdal's VSI f
                                      
 ## Status
 [![CircleCI](https://circleci.com/gh/boundlessgeo/go-gdal.svg?style=svg)](https://circleci.com/gh/boundlessgeo/go-gdal)
+[![Go Report Card](https://goreportcard.com/badge/github.com/boundlessgeo/go-gdal)](https://goreportcard.com/report/github.com/boundlessgeo/go-gdal)
 
 ## Installation
 
