@@ -3,7 +3,7 @@ Package gdal provides a wrapper for GDAL, the Geospatial Data Abstraction Librar
 
 Limitations
 
-Some less oftenly used functions are not yet implemented.  The majoriry of these involve style tables, asynchronous I/O, and GCPs.
+Some less often used functions are not yet implemented.  The majority of these involve style tables, asynchronous I/O, and GCPs.
 
 The documentation is fairly limited, but the functionality fairly closely matches that of the C++ api.
 
@@ -17,7 +17,7 @@ A simple program to create a georeferenced blank 256x256 GeoTIFF:
 	import (
 		"fmt"
 		"flag"
-		gdal "github.com/lukeroth/gdal_go"
+		gdal "github.com/boundlessgeo/go-gdal"
 	)
 
 	func main() {
