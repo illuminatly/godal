@@ -3,7 +3,7 @@
 
 The gdal.go package provides a go wrapper for GDAL, the Geospatial Data Abstraction Library. More information about GDAL can be found at http://www.gdal.org
 This repo was originally forked from `github.com/lukeroth/gdal` however it appears that most development has stopped. This
-pulls in several unmerged PRs from that repo (including importantly gdal's VSI functionality).
+pulls in several unmerged PRs from that repo (including importantly gdal's VSI functionality) and continues to extend functionality.
                                      
 
 ## Installation
