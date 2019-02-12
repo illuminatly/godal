@@ -278,22 +278,19 @@ type ColorEntry struct {
 	cval *C.GDALColorEntry
 }
 
-type VSILFILE struct {
+type VSIFile struct {
 	cval *C.VSILFILE
 }
 
-type VSIDIR struct {
+type VSIDir struct{
 	cval *C.VSIDIREntry
 }
 
 type VSIStatGo struct {
 	Exists bool
-	Size  uint64
+	Size  int64
 }
 
-type VSISTAT struct {
-	cval *C.VSIStatBufL
-}
 /* -------------------------------------------------------------------- */
 /*      Callback "progress" function.                                   */
 /* -------------------------------------------------------------------- */
@@ -1771,7 +1768,7 @@ func VSIReadDirRecursive(filename string) []string {
 
 
 // Open file.
-func VSIFOpenL(filename string, fileAccess string) (VSILFILE, error) {
+func VSIFOpenL(filename string, fileAccess string) (VSIFile, error) {
 	cFileName := C.CString(filename)
 	defer C.free(unsafe.Pointer(cFileName))
 	cFileAccess := C.CString(fileAccess)
@@ -1779,19 +1776,19 @@ func VSIFOpenL(filename string, fileAccess string) (VSILFILE, error) {
 	file := C.VSIFOpenL(cFileName, cFileAccess)
 
 	if file == nil {
-		return VSILFILE{nil}, fmt.Errorf("Error: VSILFILE '%s' open error", filename)
+		return VSIFile{nil}, fmt.Errorf("Error: VSIFile '%s' open error", filename)
 	}
-	return VSILFILE{file}, nil
+	return VSIFile{file}, nil
 }
 
 // Close file.
-func VSIFCloseL(file VSILFILE) {
+func VSIFCloseL(file VSIFile) {
 	C.VSIFCloseL(file.cval)
 	return
 }
 
 // Read bytes from file.
-func VSIFReadL(nSize, nCount int, file VSILFILE) []byte {
+func VSIFReadL(nSize, nCount int, file VSIFile) []byte {
 	data := make([]byte, nSize*nCount)
 	p := unsafe.Pointer(&data[0])
 	C.VSIFReadL(p, C.size_t(nSize), C.size_t(nCount), file.cval)
@@ -1817,17 +1814,13 @@ func VSIStat(filename string)(VSIStatGo, error){
 	cFileName := C.CString(filename)
 	defer C.free(unsafe.Pointer(cFileName))
 	fileStat := &C.VSIStatBufL{}
-	defer C.free(unsafe.Pointer(fileStat))
 	code := C.VSIStatExL(cFileName, fileStat, 0)
+
 	if code != -1 {
-
-		//todo: convert c.longlong to uint64
-
-		return VSIStatGo{Exists: true,Size: fileStat.st_size}, nil
+		refVal := reflect.ValueOf(fileStat.st_size)
+		return VSIStatGo{Exists: true,Size: refVal.Int()}, nil
 	} else {
 		return VSIStatGo{}, errors.New(fmt.Sprintf("Unable to stat file %s",filename))
 	}
-
-
 
 }

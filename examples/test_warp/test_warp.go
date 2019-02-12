@@ -5,8 +5,7 @@ import (
 	"fmt"
 	"log"
 	"strings"
-
-	"../.."
+	"github.com/boundlessgeo/go-gdal"
 )
 
 func main() {
