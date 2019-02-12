@@ -5,6 +5,8 @@ The gdal.go package provides a go wrapper for GDAL, the Geospatial Data Abstract
 This repo was originally forked from `github.com/lukeroth/gdal` however it appears that most development has stopped. This
 pulls in several unmerged PRs from that repo (including importantly gdal's VSI functionality) and continues to extend functionality.
                                      
+## Status
+[![CircleCI](https://circleci.com/gh/boundlessgeo/go-gdal.svg?style=svg)](https://circleci.com/gh/boundlessgeo/go-gdal)
 
 ## Installation
 
