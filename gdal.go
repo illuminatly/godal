@@ -14,6 +14,7 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
+	"strings"
 	"unsafe"
 )
 
@@ -1744,6 +1745,31 @@ func FlushCacheBlock() bool {
 /* ==================================================================== */
 /*      GDAL VSI Virtual File System                                    */
 /* ==================================================================== */
+
+//List files in a directory structure -- returning absolute URLs
+func VSIReadDirRecursiveAbs(filename string) []string {
+
+		prefix := filename
+
+		//trailing slash
+		if !strings.HasSuffix(filename,"/"){
+			prefix = prefix+"/"
+		}
+
+		urls := VSIReadDirRecursive(filename)
+
+		absUrls := make([]string, 0)
+		for _, url := range urls{
+			//omit directories
+			if !strings.HasSuffix(url, "/") {
+				absUrls = append(absUrls, prefix+url)
+			}
+		}
+		return absUrls
+
+
+
+}
 
 // List VSI files
 func VSIReadDirRecursive(filename string) []string {
