@@ -282,13 +282,13 @@ type VSIFile struct {
 	cval *C.VSILFILE
 }
 
-type VSIDir struct{
+type VSIDir struct {
 	cval *C.VSIDIREntry
 }
 
 type VSIStatGo struct {
 	Exists bool
-	Size  int64
+	Size   int64
 }
 
 /* -------------------------------------------------------------------- */
@@ -571,7 +571,6 @@ func (driver Driver) LongName() string {
 // Unimplemented: DuplicateGCPs
 // Unimplemented: GCPsToGeoTransform
 // Unimplemented: ApplyGeoTransform
-
 
 /* ==================================================================== */
 /*      major objects (dataset, and, driver, drivermanager).            */
@@ -1766,7 +1765,6 @@ func VSIReadDirRecursive(filename string) []string {
 	return strings
 }
 
-
 // Open file.
 func VSIFOpenL(filename string, fileAccess string) (VSIFile, error) {
 	cFileName := C.CString(filename)
@@ -1797,29 +1795,14 @@ func VSIFReadL(nSize, nCount int, file VSIFile) []byte {
 }
 
 // Delete (unlink) a VSI file
-func VSIUnlink(filename string)(bool, error){
+func VSIUnlink(filename string) (bool, error) {
 
 	cFileName := C.CString(filename)
 	defer C.free(unsafe.Pointer(cFileName))
 	status := C.VSIUnlink(cFileName)
-	if(status == 0 ){
+	if status == 0 {
 		return true, nil
 	} else {
-		return false, errors.New(fmt.Sprintf("Error deleting file %v ",filename))
-	}
-}
-
-func VSIStat(filename string)(VSIStatGo, error){
-
-	cFileName := C.CString(filename)
-	defer C.free(unsafe.Pointer(cFileName))
-	fileStat := &C.VSIStatBufL{}
-	code := C.VSIStatExL(cFileName, fileStat, 0)
-
-	if code != -1 {
-		refVal := reflect.ValueOf(fileStat.st_size)
-		return VSIStatGo{Exists: true,Size: refVal.Int()}, nil
-	} else {
-		return VSIStatGo{}, errors.New(fmt.Sprintf("Unable to stat file %s",filename))
+		return false, errors.New(fmt.Sprintf("Error deleting file %v ", filename))
 	}
 }
