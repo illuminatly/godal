@@ -1421,7 +1421,7 @@ func (layer Layer) AlterFieldDefn(index int, newDefn FieldDefinition, flags int)
 	return C.OGR_L_AlterFieldDefn(layer.cval, C.int(index), newDefn.cval, C.int(flags)).Err()
 }
 
-// Begin a transation on data sources which support it
+// Begin a transaction on data sources which support it
 func (layer Layer) StartTransaction() error {
 	return C.OGR_L_StartTransaction(layer.cval).Err()
 }
