@@ -17,7 +17,7 @@ pulls in several unmerged PRs from that repo (including importantly gdal's VSI f
 
 ## Compatibility
 
-This software has been tested most recently on OSX and Linux using GDAL 2.4.0
+This software has been tested most recently on 1) OSX and 2) Ubuntu 19.04 Linux using GDAL 2.4.0 
 
 ## Examples
 
