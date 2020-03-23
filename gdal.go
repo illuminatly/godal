@@ -47,7 +47,7 @@ var (
 )
 
 // Error handling.  The following is bare-bones, and needs to be replaced with something more useful.
-func (err _Ctype_CPLErr) Err() error {
+func (err C.CPLErr) Err() error {
 	switch err {
 	case 0:
 		return nil
@@ -63,7 +63,7 @@ func (err _Ctype_CPLErr) Err() error {
 	return ErrIllegal
 }
 
-func (err _Ctype_OGRErr) Err() error {
+func (err C.OGRErr) Err() error {
 	switch err {
 	case 0:
 		return nil
@@ -1749,25 +1749,23 @@ func FlushCacheBlock() bool {
 //List files in a directory structure -- returning absolute URLs
 func VSIReadDirRecursiveAbs(filename string) []string {
 
-		prefix := filename
+	prefix := filename
 
-		//trailing slash
-		if !strings.HasSuffix(filename,"/"){
-			prefix = prefix+"/"
+	//trailing slash
+	if !strings.HasSuffix(filename, "/") {
+		prefix = prefix + "/"
+	}
+
+	urls := VSIReadDirRecursive(filename)
+
+	absUrls := make([]string, 0)
+	for _, url := range urls {
+		//omit directories
+		if !strings.HasSuffix(url, "/") {
+			absUrls = append(absUrls, prefix+url)
 		}
-
-		urls := VSIReadDirRecursive(filename)
-
-		absUrls := make([]string, 0)
-		for _, url := range urls{
-			//omit directories
-			if !strings.HasSuffix(url, "/") {
-				absUrls = append(absUrls, prefix+url)
-			}
-		}
-		return absUrls
-
-
+	}
+	return absUrls
 
 }
 
