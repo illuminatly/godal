@@ -7,8 +7,10 @@
 
 #include <gdal.h>
 #include <gdal_alg.h>
+#include <gdal_utils.h>
 #include <gdalwarper.h>
 #include <cpl_conv.h>
+#include <cpl_string.h>
 #include <ogr_srs_api.h>
 
 // transform GDALProgressFunc to go func
