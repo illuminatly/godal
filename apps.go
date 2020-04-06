@@ -81,6 +81,9 @@ func GDALWarp(
 	cOptions[length] = (*C.char)(unsafe.Pointer(nil))
 
 	gdalWarpOptions := GDALWarpAppOptions{C.GDALWarpAppOptionsNew((**C.char)(unsafe.Pointer(&cOptions[0])), nil)}
+	if gdalWarpOptions.cval == nil {
+		fmt.Println("Warp options value is nil")
+	}
 
 	pahSrcDs := make([]C.GDALDatasetH, len(srcDs)+1)
 	for i := 0; i < len(srcDs); i++ {
