@@ -82,7 +82,8 @@ func GDALWarp(
 
 	gdalWarpOptions := GDALWarpAppOptions{C.GDALWarpAppOptionsNew((**C.char)(unsafe.Pointer(&cOptions[0])), nil)}
 	if gdalWarpOptions.cval == nil {
-		fmt.Println("Warp options value is nil")
+		fmt.Println("GDALWarpAppOptionsNew() returned a null pointer.")
+		return Dataset{}, ErrFailure
 	}
 
 	pahSrcDs := make([]C.GDALDatasetH, len(srcDs)+1)
@@ -99,8 +100,6 @@ func GDALWarp(
 		gdalWarpOptions.cval,
 		&err,
 	)
-	fmt.Println("Error code from warp is:")
-	fmt.Println(err)
 
 	if err != 0 {
 		return Dataset{outputDs}, ErrFailure
