@@ -96,9 +96,10 @@ func GDALWarp(
 		gdalWarpOptions.cval,
 		&err,
 	)
+	fmt.Println("Error code from warp is:")
+	fmt.Println(err)
 
-	if err != 0 {
-
+	if err != nil {
 		return Dataset{outputDs}, ErrFailure
 	}
 
