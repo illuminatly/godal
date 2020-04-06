@@ -99,7 +99,7 @@ func GDALWarp(
 	fmt.Println("Error code from warp is:")
 	fmt.Println(err)
 
-	if err != nil {
+	if err != 0 {
 		return Dataset{outputDs}, ErrFailure
 	}
 
