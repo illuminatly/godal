@@ -31,6 +31,7 @@ type GDALTranslateOptions struct {
 type GDALWarpAppOptions struct {
 	cval *C.GDALWarpAppOptions
 }
+
 //GDALTranslate is a utility to convert images into different formats
 func GDALTranslate(
 	destName string,
@@ -60,13 +61,14 @@ func GDALTranslate(
 	return Dataset{outputDs}
 
 }
+
 //GDALWarp is a utility to warp images into different projections
 func GDALWarp(
 	destName string,
 	dstDs Dataset,
 	srcDs []Dataset,
 	options []string,
-) Dataset {
+) (Dataset, error) {
 
 	var err C.int
 
@@ -95,6 +97,11 @@ func GDALWarp(
 		&err,
 	)
 
-	return Dataset{outputDs}
+	if err != 0 {
+
+		return Dataset{outputDs}, ErrFailure
+	}
+
+	return Dataset{outputDs}, nil
 
 }
