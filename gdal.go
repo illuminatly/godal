@@ -297,13 +297,11 @@ type BuildVRTOptions struct {
 }
 
 type GoBuildVRTOptions struct {
-	Extent         [4]float64   // spatial extent of the output VRT {x0 y0 x1 y1}
-	XRes           float64      // x spatial resolution of the output VRT 
-	YRes           float64      // y spatial resolution of the output VRT 
-	Resample    ResampleAlg  // Resampling alg
+	Extent   [4]float64  // spatial extent of the output VRT {x0 y0 x1 y1}
+	XRes     float64     // x spatial resolution of the output VRT
+	YRes     float64     // y spatial resolution of the output VRT
+	Resample ResampleAlg // Resampling alg
 }
-
-
 
 /* -------------------------------------------------------------------- */
 /*      Callback "progress" function.                                   */
@@ -1847,8 +1845,8 @@ func VSIUnlink(filename string) (bool, error) {
 /*
 type GoBuildVRTOptions struct {
 	extent          [4]float64 // spatial extent of the output VRT {x0 y0 x1 y1}
-	x_res           float64    // x spatial resolution of the output VRT 
-	y_res           float64    // y spatial resolution of the output VRT 
+	x_res           float64    // x spatial resolution of the output VRT
+	y_res           float64    // y spatial resolution of the output VRT
 	outputSRID      int64      // SRID of the output spatial reference
 }
 */
@@ -1858,72 +1856,71 @@ func BuildVRTOptionsNew(vrtOptions GoBuildVRTOptions) BuildVRTOptions {
 
 	ex := vrtOptions.Extent
 
-    opts := [...]string{
-        "-te",
-        fmt.Sprintf("%f", ex[0]),
-        fmt.Sprintf("%f", ex[1]),
-        fmt.Sprintf("%f", ex[2]),
-        fmt.Sprintf("%f", ex[3]),
-        "-tr",
-        fmt.Sprintf("%f", vrtOptions.XRes),
-        fmt.Sprintf("%f", vrtOptions.YRes),
-        "-r",
-        fmt.Sprintf("%d", vrtOptions.Resample),
-        "-resolution",
-        "user",}
+	opts := [...]string{
+		"-te",
+		fmt.Sprintf("%f", ex[0]),
+		fmt.Sprintf("%f", ex[1]),
+		fmt.Sprintf("%f", ex[2]),
+		fmt.Sprintf("%f", ex[3]),
+		"-tr",
+		fmt.Sprintf("%f", vrtOptions.XRes),
+		fmt.Sprintf("%f", vrtOptions.YRes),
+		"-r",
+		fmt.Sprintf("%d", vrtOptions.Resample),
+		"-resolution",
+		"user"}
 
-    length := len(opts)
+	length := len(opts)
 
-    argv := make([]*C.char, length+1)
+	argv := make([]*C.char, length+1)
 
-    for i := 0; i < length; i++ {
+	for i := 0; i < length; i++ {
 		argv[i] = C.CString(opts[i])
 		defer C.free(unsafe.Pointer(argv[i]))
 	}
 	argv[length] = (*C.char)(unsafe.Pointer(nil))
 
-    vrtOpts := C.GDALBuildVRTOptionsNew((**C.char)(unsafe.Pointer(&argv[0])), nil)
+	vrtOpts := C.GDALBuildVRTOptionsNew((**C.char)(unsafe.Pointer(&argv[0])), nil)
 	return BuildVRTOptions{vrtOpts}
 
 }
 
-// BuildVRT creates a new dataset that is the mosaic of the input files. 
+// BuildVRT creates a new dataset that is the mosaic of the input files.
 func BuildVRT(
-    outputFile string,
-    vrtOptions GoBuildVRTOptions,
-    inputDatasets []string,
+	outputFile string,
+	vrtOptions GoBuildVRTOptions,
+	inputDatasets []string,
 ) Dataset {
 
-    // Flag to store error code
-    var err C.int
+	// Flag to store error code
+	var err C.int
 
-    // Parse the user options
-    buildVRTOptions := BuildVRTOptionsNew(vrtOptions)
+	// Parse the user options
+	buildVRTOptions := BuildVRTOptionsNew(vrtOptions)
 
-    // Output file path for the VRT dataset
-    cPath := C.CString(outputFile)
-    defer C.free(unsafe.Pointer(cPath))
+	// Output file path for the VRT dataset
+	cPath := C.CString(outputFile)
+	defer C.free(unsafe.Pointer(cPath))
 
-    // Create C strings for the input files
-    length := len(inputDatasets)
-    srcDSNames := make([]*C.char, length+1)
+	// Create C strings for the input files
+	length := len(inputDatasets)
+	srcDSNames := make([]*C.char, length+1)
 
-    for i := 0; i < length; i++ {
-        srcDSNames[i] = C.CString(inputDatasets[i])
-        defer C.free(unsafe.Pointer(srcDSNames[i]))
-    }
-    srcDSNames[length] = (*C.char)(unsafe.Pointer(nil))
+	for i := 0; i < length; i++ {
+		srcDSNames[i] = C.CString(inputDatasets[i])
+		defer C.free(unsafe.Pointer(srcDSNames[i]))
+	}
+	srcDSNames[length] = (*C.char)(unsafe.Pointer(nil))
 
-    // Call the BuildVRT function
-    outputDs := C.GDALBuildVRT(
-        cPath,                      // Output dataset path
-        C.int(len(inputDatasets)),  // Number of input datasets
-        nil,                        // pointer to input dataset (nil)
-        (**C.char)(unsafe.Pointer(&srcDSNames[0])),
-        buildVRTOptions.cval,
-        &err,
-    )
+	// Call the BuildVRT function
+	outputDs := C.GDALBuildVRT(
+		cPath,                     // Output dataset path
+		C.int(len(inputDatasets)), // Number of input datasets
+		nil,                       // pointer to input dataset (nil)
+		(**C.char)(unsafe.Pointer(&srcDSNames[0])),
+		buildVRTOptions.cval,
+		&err,
+	)
 
-    return Dataset{outputDs}
+	return Dataset{outputDs}
 }
-
