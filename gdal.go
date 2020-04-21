@@ -1562,6 +1562,7 @@ func (ct ColorTable) Entry(index int) ColorEntry {
 
 // FromRGB updates a ColorEntry with r/g/b values
 func (ce *ColorEntry) FromRGB(red, green, blue uint8) {
+	(*ce.cval) = C.GDALColorEntry{}
 	(*ce.cval).c1 = C.short(red)
 	(*ce.cval).c2 = C.short(green)
 	(*ce.cval).c3 = C.short(blue)
