@@ -1562,7 +1562,8 @@ func (ct ColorTable) Entry(index int) ColorEntry {
 
 // FromRGB updates a ColorEntry with r/g/b values
 func (ce *ColorEntry) FromRGB(color *[4]int16) {
-	ce.cval = (*C.GDALColorEntry)(unsafe.Pointer(&((*color)[0])))
+	colorArray := *color
+	ce.cval = (*C.GDALColorEntry)(unsafe.Pointer(&colorArray[0]))
 }
 
 // Unimplemented: EntryAsRGB
