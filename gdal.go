@@ -1560,14 +1560,22 @@ func (ct ColorTable) Entry(index int) ColorEntry {
 	return ColorEntry{entry}
 }
 
+// FromRGB updates a ColorEntry with r/g/b values
+func (ce *ColorEntry) FromRGB(red, green, blue uint8) {
+	(*ce.cval).c1 = C.short(red)
+	(*ce.cval).c2 = C.short(green)
+	(*ce.cval).c3 = C.short(blue)
+	(*ce.cval).c4 = C.short(255)
+}
+
 // Unimplemented: EntryAsRGB
 
-// Set entry in color table
+// SetEntry in color table
 func (ct ColorTable) SetEntry(index int, entry ColorEntry) {
 	C.GDALSetColorEntry(ct.cval, C.int(index), entry.cval)
 }
 
-// Create color ramp
+// CreateColorRamp creates a color ramp
 func (ct ColorTable) CreateColorRamp(start, end int, startColor, endColor ColorEntry) {
 	C.GDALCreateColorRamp(ct.cval, C.int(start), startColor.cval, C.int(end), endColor.cval)
 }
