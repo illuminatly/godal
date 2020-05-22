@@ -108,3 +108,51 @@ func GDALWarp(
 	return Dataset{outputDs}, nil
 
 }
+
+// BuildVRT creates a new dataset that is the mosaic of the input files.
+func BuildVRT(
+	outputFile string,
+	inputDatasets []string,
+	options []string,
+) Dataset {
+
+	// Flag to store error code
+	var err C.int
+
+	// Parse the user options
+	length := len(options)
+	cOptions := make([]*C.char, length+1)
+	for i := 0; i < length; i++ {
+		cOptions[i] = C.CString(options[i])
+		defer C.free(unsafe.Pointer(cOptions[i]))
+	}
+	cOptions[length] = (*C.char)(unsafe.Pointer(nil))
+
+	buildVRTOptions := BuildVRTOptions{C.GDALBuildVRTOptionsNew((**C.char)(unsafe.Pointer(&cOptions[0])), nil)}
+
+	// Output file path for the VRT dataset
+	cPath := C.CString(outputFile)
+	defer C.free(unsafe.Pointer(cPath))
+
+	// Create C strings for the input files
+	length = len(inputDatasets)
+	srcDSNames := make([]*C.char, length+1)
+
+	for i := 0; i < length; i++ {
+		srcDSNames[i] = C.CString(inputDatasets[i])
+		defer C.free(unsafe.Pointer(srcDSNames[i]))
+	}
+	srcDSNames[length] = (*C.char)(unsafe.Pointer(nil))
+
+	// Call the BuildVRT function
+	outputDs := C.GDALBuildVRT(
+		cPath,                     // Output dataset path
+		C.int(len(inputDatasets)), // Number of input datasets
+		nil,                       // pointer to input dataset (nil)
+		(**C.char)(unsafe.Pointer(&srcDSNames[0])),
+		buildVRTOptions.cval,
+		&err,
+	)
+
+	return Dataset{outputDs}
+}

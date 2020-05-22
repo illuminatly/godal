@@ -21,7 +21,7 @@ var _ = fmt.Println
 /* Misc functions                                */
 /* --------------------------------------------- */
 
-// Compute optimal PCT for RGB image
+// ComputeMedianCutPCT computes optimal PCT for RGB image
 func ComputeMedianCutPCT(
 	red, green, blue RasterBand,
 	colors int,

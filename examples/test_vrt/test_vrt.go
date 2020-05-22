@@ -2,42 +2,31 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/Rob-Fletcher/go-gdal"
 )
 
 func main() {
 
-    extent := [4]float64{
-        -80.82471,
-        28.616317,
-        -80.80688,
-        28.632901,
-    }
+	//var ds gdal.Dataset
+	imageList := []string{
+		"/vsis3/jaic-dev-ra-rasterstore/jaicdev_gis_NOAA_Hurricane_Dorian_lkbpjiel/fef57e1fc4030a0c049e0c0bdff87415bd13d95fa6e0317fc9728719f4764e19.tif",
+		"/vsis3/jaic-dev-ra-rasterstore/jaicdev_gis_NOAA_Hurricane_Dorian_lkbpjiel/ff684a4099155d03b26fccc2edf32371aa30efc624a9704123bb25a25a5e0840.tif",
+		"/vsis3/jaic-dev-ra-rasterstore/jaicdev_gis_NOAA_Hurricane_Dorian_lkbpjiel/ff730ad627b3e7361ac610048e2fc5b4ea0731a127c1daeb4d2a20600040e1a0.tif",
+		"/vsis3/jaic-dev-ra-rasterstore/jaicdev_gis_NOAA_Hurricane_Dorian_lkbpjiel/fff1281b2e63039339ce32188c71568be237d4a386e491268a9cb1bbcf1b7b79.tif",
+		"/vsis3/jaic-dev-ra-rasterstore/jaicdev_gis_NOAA_Hurricane_Dorian_lkbpjiel/fffdaefa24ebaa16eafe9633f0007642dcd94f6a5b03b87c5bb9115be7e84a4a.tif",
+		"/vsis3/jaic-dev-ra-rasterstore/jaicdev_gis_NOAA_Hurricane_Dorian_lkbpjiel/ffff76ea1eeb30ccbe89fc13ee1a2a9a5f1a322d93d883d2cd5c6caf59fb7283.tif",
+	}
 
-    vrtOptions := gdal.GoBuildVRTOptions{
-        Extent: extent,
-        XRes: 5e-6,
-        YRes: 5e-6,
-        Resample: gdal.GRA_NearestNeighbour,
-    }
-    fmt.Println(vrtOptions)
+	options := []string{}
 
-    //var ds gdal.Dataset
-    imageList := []string{
-        "/data/projects/jaic/20190905aC0804930w283730n.tif",
-        "/data/projects/jaic/20190905aC0804930w283900n.tif",
-        "/data/projects/jaic/20190905bC0804930w283730n.tif",
-        "/data/projects/jaic/20190905bC0804930w283900n.tif",
-    }
+	outputFile := "/vsis3/jaic-dev-ra-rasterstore/jaicdev_gis_NOAA_Hurricane_Dorian_lkbpjiel/test.vrt"
 
-    outputFile := "/data/projects/jaic/test_out.tif"
+	outputDs := gdal.BuildVRT(outputFile, imageList, options)
 
-    outputDs := gdal.BuildVRT(outputFile, vrtOptions, imageList)
+	fmt.Println(outputDs)
 
-
-    fmt.Println(outputDs)
-
-    outputDs.Close()
+	outputDs.Close()
 
 	//outputDs := gdal.GDALWarp(outputFile, gdal.Dataset{}, []gdal.Dataset{ds}, options)
 	fmt.Printf("End program\n")
