@@ -5,6 +5,8 @@ jobs:
   build:
     docker:
       - image: robmotron/circleci-gdal-go
+    environment:
+      CODECOV_TOKEN: d9c876d1-6335-4e25-916a-4ee76b5847a7
 
     working_directory: /go/src/github.com/Rob-Fletcher/go-gdal
     steps:
@@ -23,5 +25,4 @@ jobs:
       - store_artifacts:
           path: /tmp/artifacts
       - codecov/upload:
-          token: d9c876d1-6335-4e25-916a-4ee76b5847a7
           file: /tmp/artifacts/coverage.html
