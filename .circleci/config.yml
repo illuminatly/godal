@@ -23,4 +23,5 @@ jobs:
       - store_artifacts:
           path: /tmp/artifacts
       - codecov/upload:
+          token: d9c876d1-6335-4e25-916a-4ee76b5847a7
           file: /tmp/artifacts/coverage.html
