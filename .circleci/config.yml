@@ -25,4 +25,4 @@ jobs:
       - store_artifacts:
           path: /tmp/artifacts
       - codecov/upload:
-          file: /tmp/artifacts/coverage.html
+          file: c.out
