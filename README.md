@@ -8,6 +8,7 @@ pulls in several unmerged PRs from that repo (including importantly gdal's VSI f
 ## Status
 [![CircleCI](https://circleci.com/gh/Rob-Fletcher/go-gdal.svg?style=shield)](https://circleci.com/gh/Rob-Fletcher/go-gdal)
 [![Go Report Card](https://goreportcard.com/badge/github.com/Rob-Fletcher/go-gdal)](https://goreportcard.com/report/github.com/Rob-Fletcher/go-gdal)
+[![codecov](https://codecov.io/gh/Rob-Fletcher/go-gdal/branch/master/graph/badge.svg)](https://codecov.io/gh/Rob-Fletcher/go-gdal)
 ## Installation
 
 1) go get github.com/boundless/go-gdal

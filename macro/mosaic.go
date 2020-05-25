@@ -3,25 +3,28 @@ package macro
 import "C"
 import (
 	"fmt"
-	"github.com/boundlessgeo/go-gdal"
 	"sync"
+
+	"github.com/Rob-Fletcher/go-gdal"
 )
 
 // Mosaic accepts a list of files (including VSI files) and mosaics them together and outputs them in the provided
 // projection
-func Mosaic(urls []string, epsg string) () {
+func Mosaic(urls []string, epsg string) {
 
-	if len(urls) == 0{ return }
+	if len(urls) == 0 {
+		return
+	}
 
-	datasets := make([]gdal.Dataset,0)
+	datasets := make([]gdal.Dataset, 0)
 
 	var wg sync.WaitGroup
-	for _,url := range urls {
+	for _, url := range urls {
 		wg.Add(1)
 
 		go func(url string) {
 			defer wg.Done()
-			ds, err := gdal.Open(url,gdal.ReadOnly)
+			ds, err := gdal.Open(url, gdal.ReadOnly)
 			if err != nil {
 				println(fmt.Sprintf("Error opening file %s -- skipping", url))
 			} else {
@@ -35,4 +38,3 @@ func Mosaic(urls []string, epsg string) () {
 	//todo: combine and close datasets
 
 }
-
