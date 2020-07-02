@@ -31,7 +31,7 @@ func CreateSpatialReference(wkt *string) SpatialReference {
 	    sr := C.OSRNewSpatialReference(cString)
 	    return SpatialReference{sr}
 	}
-	sr := C.OSRNewSpatialReference(wkt)
+	sr := C.OSRNewSpatialReference(nil)
 	return SpatialReference{sr}
 }
 
