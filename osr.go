@@ -24,10 +24,14 @@ type SpatialReference struct {
 }
 
 // Create a new SpatialReference
-func CreateSpatialReference(wkt string) SpatialReference {
-	cString := C.CString(wkt)
-	defer C.free(unsafe.Pointer(cString))
-	sr := C.OSRNewSpatialReference(cString)
+func CreateSpatialReference(wkt *string) SpatialReference {
+	if wkt != nil {
+	    cString := C.CString(*wkt)
+	    defer C.free(unsafe.Pointer(cString))
+	    sr := C.OSRNewSpatialReference(cString)
+	    return SpatialReference{sr}
+	}
+	sr := C.OSRNewSpatialReference(wkt)
 	return SpatialReference{sr}
 }
 
