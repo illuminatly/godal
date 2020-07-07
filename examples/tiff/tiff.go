@@ -3,7 +3,8 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/boundlessgeo/go-gdal"
+
+	"github.com/Rob-Fletcher/go-gdal"
 )
 
 func main() {

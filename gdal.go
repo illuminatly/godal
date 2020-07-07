@@ -27,6 +27,7 @@ func init() {
 /* -------------------------------------------------------------------- */
 /*      Significant constants.                                          */
 /* -------------------------------------------------------------------- */
+// TODO: lots of cleanup to do
 
 const (
 	VERSION_MAJOR = int(C.GDAL_VERSION_MAJOR)

@@ -1,14 +1,28 @@
-# Golang CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-go/ for more details
-version: 2
+version: 2.1
+orbs:
+  codecov: codecov/codecov@1.0.2
 jobs:
   build:
     docker:
-      - image: quay.io/boundlessgeo/circleci-gdal-go:latest
-    working_directory: /go/src/github.com/boundlessgeo/go-gdal
+      - image: robmotron/circleci-gdal-go
+    environment:
+      CODECOV_TOKEN: d9c876d1-6335-4e25-916a-4ee76b5847a7
+
+    working_directory: /go/src/github.com/Rob-Fletcher/go-gdal
     steps:
       - checkout
       - run: go get -v -t -d ./...
       - run: go build .
-      - run: go test -v ./...
+      - run:
+          name: "Create temp directory for artifacts"
+          command: |
+            mkdir -p /tmp/artifacts
+      - run:
+          command: |
+            go test -coverprofile=c.out
+            go tool cover -html=c.out -o coverage.html
+            mv coverage.html /tmp/artifacts
+      - store_artifacts:
+          path: /tmp/artifacts
+      - codecov/upload:
+          file: c.out
