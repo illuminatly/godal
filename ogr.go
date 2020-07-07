@@ -639,6 +639,12 @@ func (geom Geometry) Z(index int) float64 {
 	return float64(z)
 }
 
+// Fetch the M coordinate of a point in the geometry
+func (geom Geometry) M(index int) float64 {
+	m := C.OGR_G_GetM(geom.cval, C.int(index))
+	return float64(m)
+}
+
 // Fetch the coordinates of a point in the geometry
 func (geom Geometry) Point(index int) (x, y, z float64) {
 	C.OGR_G_GetPoint(
