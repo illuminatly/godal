@@ -4,7 +4,7 @@ import (
 	"flag"
 	"fmt"
 
-	"github.com/Rob-Fletcher/go-gdal"
+	"github.com/illuminatly/godal"
 )
 
 func main() {

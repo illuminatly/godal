@@ -6,7 +6,7 @@ import (
 	"log"
 	"strings"
 
-	"github.com/Rob-Fletcher/go-gdal"
+	"github.com/illuminatly/godal"
 )
 
 func main() {
